@@ -25,7 +25,7 @@ const BlockType = enum {
 const DenseBlock = struct {
     type: BlockType,
     block_count: u32,
-    id: ?u8,
+    id: ?u32,
 };
 
 fn parseInput(allocator: Allocator, input_line: []const u8) ![]DenseBlock {
@@ -33,7 +33,7 @@ fn parseInput(allocator: Allocator, input_line: []const u8) ![]DenseBlock {
     defer blocks.deinit();
 
     var block_type = BlockType.File;
-    var file_id: u8 = 0;
+    var file_id: u32 = 0;
 
     for (input_line) |c| {
         const block_count = c - '0';
@@ -54,16 +54,22 @@ fn parseInput(allocator: Allocator, input_line: []const u8) ![]DenseBlock {
     return try blocks.toOwnedSlice();
 }
 
-fn checksum(blocks: []DenseBlock) u64 {
+fn sort_blocks(blocks: []DenseBlock) void {
     var front_pointer: usize = 0;
     var back_pointer: usize = blocks.len - 1;
     if (blocks[back_pointer].type == .Space) back_pointer -= 1;
 
     var checksum: u64 = 0;
     var at_block: usize = 0;
-    while (front_pointer != back_pointer) {}
+    while (front_pointer != back_pointer) {
+        front_pointer += 1;
+        back_pointer += 1;
+        checksum = 1;
+        at_block += 1;
+        break;
+    }
 
-    return 0;
+    return checksum;
 }
 
 pub fn main() !void {
@@ -85,13 +91,13 @@ pub fn main() !void {
                 block.block_count,
             });
         } else {
-            std.debug.print("Type: {s}, Count: {d}\n", .{
+            std.debug.print("Id: XXXX, Type: {s}, Count: {d}\n", .{
                 @tagName(block.type),
                 block.block_count,
             });
         }
     }
 
-    const p1 = checksum(dense_disk_layout);
+    const p1 = sort_blocks(dense_disk_layout);
     std.debug.print("Part 1: {d}\n", .{p1});
 }

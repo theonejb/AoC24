@@ -1,0 +1,7 @@
+[nix]
+channel = "stable-24_05"
+
+[languages.zig]
+pattern = "**/*.zig"
+[languages.zig.languageServer]
+start = "zls"
